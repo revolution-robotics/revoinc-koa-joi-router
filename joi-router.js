@@ -3,7 +3,6 @@
 import assert from 'assert'
 import debug$0 from 'debug'
 import isGenFn from 'is-gen-fn'
-import flatten from 'flatten'
 import methods from 'methods'
 import KoaRouter from '@koa/router'
 import asyncBusboy from '@revoinc/async-busboy'
@@ -110,8 +109,8 @@ Router.prototype._addRoute = function addRoute (spec) {
   const bodyParser = makeBodyParser(spec)
   const specExposer = makeSpecExposer(spec)
   const validator = makeValidator(spec)
-  const preHandlers = spec.pre ? flatten(spec.pre) : []
-  const handlers = flatten(spec.handler)
+  const preHandlers = spec.pre ? spec.pre.flat(Infinity) : []
+  const handlers = spec.handler.flat(Infinity)
   const args = [
     spec.path
   ].concat(preHandlers, [
@@ -152,7 +151,7 @@ function checkHandler (spec) {
     spec.handler = [spec.handler]
   }
 
-  return flatten(spec.handler).forEach(isSupportedFunction)
+  return spec.handler.flat(Infinity).forEach(isSupportedFunction)
 }
 
 /**
@@ -167,7 +166,7 @@ function checkPreHandler (spec) {
     spec.pre = [spec.pre]
   }
 
-  return flatten(spec.pre).forEach(isSupportedFunction)
+  return spec.pre.flat(Infinity).forEach(isSupportedFunction)
 }
 
 /**
