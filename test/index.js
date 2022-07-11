@@ -629,7 +629,7 @@ describe('koa-joi-router', () => {
             });
         });
     });
-    describe('request.parts', () => {
+    describe('request.multipart', () => {
         describe('when expected type is', () => {
             'stream multipart'.split(' ').forEach((type) => {
                 describe(`"${type}"`, () => {
@@ -640,16 +640,12 @@ describe('koa-joi-router', () => {
                             path: '/',
                             handler: async (ctx) => {
                                 let filename;
-                                let part;
-                                while ((part = await ctx.request.parts)) {
-                                    filename = part.filename;
-                                    part.resume();
-                                }
-                                // eslint-disable-next-line require-atomic-updates
+                                let { files, fields } = await ctx.request.multipart;
+                                files.forEach(file => filename = file.filename);
                                 ctx.body = {
-                                    color: ctx.request.parts.field.color,
+                                    color: fields.color,
                                     file: filename
-                                };
+                                }
                             },
                             validate: {
                                 type: type
@@ -661,7 +657,7 @@ describe('koa-joi-router', () => {
                         app.use(r.middleware());
                         test(app)
                             .put('/')
-                            .attach('file1', `${__dirname}/fixtures/koa.png`)
+                            .attach('file1', document)
                             .field('color', 'green')
                             .expect(`{"color":"green","file":"${basename(document)}"}`, done)
                     });
@@ -674,7 +670,7 @@ describe('koa-joi-router', () => {
                         method: 'put',
                         path: '/',
                         handler: (ctx) => {
-                            ctx.status = undefined === ctx.request.parts ?
+                            ctx.status = undefined === ctx.request.multipart ?
                                 200 :
                                 500;
                         },

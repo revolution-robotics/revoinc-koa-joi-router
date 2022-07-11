@@ -4,7 +4,7 @@ import isGenFn from "is-gen-fn";
 import flatten from "flatten";
 import methods from "methods";
 import KoaRouter from "@koa/router";
-import busboy from "await-busboy";
+import asyncBusboy from "@revoinc/async-busboy";
 import parse from "co-body";
 import Joi from "joi";
 import slice from "sliced";
@@ -297,7 +297,7 @@ function makeMultipartParser(spec) {
         if (!ctx.request.is('multipart/*')) {
             return ctx.throw(400, 'expected multipart');
         }
-        ctx.request.parts = busboy(ctx, opts);
+        ctx.request.multipart = asyncBusboy(ctx.req, opts);
     };
 }
 /**
