@@ -1,27 +1,21 @@
-# joi-router
+# koa-joi-router
 
-Easy, rich and fully validated [koa][] routing.
+Joi-validated [Koa][] routing.
 
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
 [![Test coverage][codecov-image]][codecov-url]
-[![David deps][david-image]][david-url]
 [![npm download][download-image]][download-url]
 
 [npm-image]: https://img.shields.io/npm/v/koa-joi-router.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/koa-joi-router
-[travis-image]: https://img.shields.io/travis/koajs/joi-router.svg?style=flat-square
-[travis-url]: https://travis-ci.org/koajs/joi-router
+[npm-url]: https://www.npmjs.com/package/@revoinc/koa-joi-router
 [codecov-image]: https://codecov.io/github/koajs/joi-router/coverage.svg?branch=master
-[codecov-url]: https://codecov.io/github/koajs/joi-router?branch=master
-[david-image]: https://img.shields.io/david/koajs/joi-router.svg?style=flat-square
-[david-url]: https://david-dm.org/koajs/joi-router
+[codecov-url]: https://codecov.io/github/revolution-robotics/revoinc-koa-joi-router?branch=main
 [download-image]: https://img.shields.io/npm/dm/koa-joi-router.svg?style=flat-square
-[download-url]: https://npmjs.org/package/koa-joi-router
+[download-url]: https://npmjs.org/package/@revoinc/koa-joi-router
 [co]: https://github.com/tj/co
 [koa]: http://koajs.com
 [co-body]: https://github.com/visionmedia/co-body
-[await-busboy]: https://github.com/aheckmann/await-busboy
+[@revoinc/async-busboy]: https://github.com/revolution-robotics/revoinc-async-busboy
 [joi]: https://github.com/hapijs/joi
 [@koa/router]: https://github.com/koajs/router
 [generate API documentation]: https://github.com/a-s-o/koa-docs
@@ -31,7 +25,7 @@ Easy, rich and fully validated [koa][] routing.
 
 - built in input validation using [joi][]
 - built in [output validation](#validating-output) using [joi][]
-- built in body parsing using [co-body][] and [await-busboy][]
+- built in body parsing using [co-body][] and [@revoinc/async-busboy][]
 - built on the great [@koa/router][]
 - [exposed route definitions](#routes) for later analysis
 - string path support
@@ -46,20 +40,20 @@ Easy, rich and fully validated [koa][] routing.
 
 #### Node compatibility
 
-NodeJS `>= 12` is required.
+NodeJS `>= 16` is required.
 
 #### Example
 
 ```js
-const koa = require('koa');
-const router = require('koa-joi-router');
-const Joi = router.Joi;
+import Koa from 'koa'
+import koaRouter from '@revoinc/koa-joi-router'
 
-const public = router();
+const Joi = koaRouter.Joi
+const public = koaRouter()
 
 public.get('/', async (ctx) => {
-  ctx.body = 'hello joi-router!';
-});
+  ctx.body = 'hello joi-router!'
+})
 
 public.route({
   method: 'post',
@@ -82,15 +76,15 @@ public.route({
     }
   },
   handler: async (ctx) => {
-    const user = await createUser(ctx.request.body);
-    ctx.status = 201;
-    ctx.body = user;
+    const user = await createUser(ctx.request.body)
+    ctx.status = 201
+    ctx.body = user
   }
-});
+})
 
-const app = new koa();
-app.use(public.middleware());
-app.listen(3000);
+const app = new Koa()
+app.use(public.middleware())
+app.listen(3000)
 ```
 
 ## Usage
@@ -99,23 +93,23 @@ The design is such that you construct multiple router instances, one for
 each section of your application which you then add as koa middleware.
 
 ```js
-const Koa = require("koa")
-const router = require('koa-joi-router');
+import Koa from 'koa'
+import koaRouter from '@revoinc/koa-joi-router'
 
-const pub = router();
-const admin = router();
-const auth = router();
+const pub = koaRouter()
+const admin = koaRouter()
+const auth = koaRouter()
 
 // add some routes ..
-pub.get('/some/path', async () => {});
-admin.get('/admin', async () => {});
-auth.post('/auth', async () => {});
+pub.get('/some/path', async () => {})
+admin.get('/admin', async () => {})
+auth.post('/auth', async () => {})
 
-const app = new Koa();
-app.use(pub.middleware());
-app.use(admin.middleware());
-app.use(auth.middleware());
-app.listen();
+const app = new Koa()
+app.use(pub.middleware())
+app.use(admin.middleware())
+app.use(auth.middleware())
+app.listen()
 ```
 
 ## Module properties
@@ -127,9 +121,9 @@ to avoid bugs related to passing an object created with a different
 release of Joi into the router.
 
 ```js
-const koa = require('koa');
-const router = require('koa-joi-router');
-const Joi = router.Joi;
+import Koa from 'koa'
+import koaRouter from '@revoinc/koa-joi-router'
+const Joi = koaRouter.Joi
 ```
 
 ## Router instance methods
@@ -140,8 +134,8 @@ Adds a new route to the router. `route()` accepts an object or array of objects
 describing route behavior.
 
 ```js
-const router = require('koa-joi-router');
-const public = router();
+import koaRouter from '@revoinc/koa-joi-router'
+const public = koaRouter()
 
 public.route({
   method: 'post',
@@ -166,14 +160,14 @@ public.route({
     ctx.status = 201;
   },
   meta: { 'this': { is: 'stored internally with the route definition' }}
-});
+})
 ```
 
 or
 
 ```js
-const router = require('koa-joi-router');
-const public = router();
+import koaRouter from '@revoinc/koa-joi-router'
+const public = koaRouter()
 
 const routes = [
   {
@@ -186,9 +180,9 @@ const routes = [
     path: '/users',
     handler: async (ctx) => {}
   }
-];
+]
 
-public.route(routes);
+public.route(routes)
 ```
 
 ##### .route() options
@@ -207,7 +201,6 @@ public.route(routes);
   - `jsonOptions`: options for co-body json parsing when `type: 'json'`
   - `multipartOptions`: options for [busboy][] parsing when `type: 'multipart'`
      - [any busboy constructor option][busboy]. eg `{ limits: { files: 1 }}`
-     - `autoFields`: Determines whether form fields should be auto-parsed (default: `true`). See the [await-busboy docs](https://github.com/aheckmann/await-busboy#parts--parsestream-options).
   - `output`: see [output validation](#validating-output)
   - `continueOnError`: if validation fails, this flags determines if `koa-joi-router` should [continue processing](#handling-errors) the middleware stack or stop and respond with an error immediately. useful when you want your route to handle the error response. default `false`
   - `validateOptions`: options for Joi validate. default `{}`
@@ -221,26 +214,26 @@ public.route(routes);
 as well.
 
 ```js
-const router = require('koa-joi-router');
-const admin = router();
+import koaRouter from '@revoinc/koa-joi-router'
+const admin = koaRouter()
 
 // signature: router.method(path [, config], handler [, handler])
 
-admin.put('/thing', handler);
-admin.get('/thing', middleware, handler);
-admin.post('/thing', config, handler);
-admin.delete('/thing', config, middleware, handler);
+admin.put('/thing', handler)
+admin.get('/thing', middleware, handler)
+admin.post('/thing', config, handler)
+admin.delete('/thing', config, middleware, handler)
 ```
 
 ### .use()
 Middleware run in the order they are defined by .use()(or .get(), etc.) They are invoked sequentially, requests start at the first middleware and work their way "down" the middleware stack which matches Express 4 API.
 
 ```js
-const router = require('koa-joi-router');
-const users = router();
+import koaRouter from '@revoinc/koa-joi-router'
+const users = koaRouter()
 
-users.get('/:id', handler);
-users.use('/:id', runThisAfterHandler);
+users.get('/:id', handler)
+users.use('/:id', runThisAfterHandler)
 ```
 
 ### .prefix()
@@ -248,14 +241,14 @@ users.use('/:id', runThisAfterHandler);
 Defines a route prefix for all defined routes. This is handy in "mounting" scenarios.
 
 ```js
-const router = require('koa-joi-router');
-const users = router();
+import koaRouter from '@revoinc/koa-joi-router'
+const users = koaRouter()
 
-users.get('/:id', handler);
+users.get('/:id', handler)
 // GET /users/3 -> 404
 // GET /3 -> 200
 
-users.prefix('/users');
+users.prefix('/users')
 // GET /users/3 -> 200
 // GET /3 -> 404
 ```
@@ -267,24 +260,24 @@ Defines middleware for named route parameters. Useful for auto-loading or valida
 _See [@koa/router](https://github.com/koajs/router/blob/master/API.md#module_koa-router--Router+param)_
 
 ```js
-const router = require('koa-joi-router');
-const users = router();
+import koaRouter from '@revoinc/koa-joi-router'
+const users = koaRouter()
 
 const findUser = (id) => {
   // stub
-  return Promise.resolve('Cheddar');
-};
+  return Promise.resolve('Cheddar')
+}
 
 users.param('user', async (id, ctx, next) => {
-  const user = await findUser(id);
-  if (!user) return ctx.status = 404;
-  ctx.user = user;
-  await next();
-});
+  const user = await findUser(id)
+  if (!user) return ctx.status = 404
+  ctx.user = user
+  await next()
+})
 
 users.get('/users/:user', (ctx) => {
-  ctx.body = `Hello ${ctx.user}`;
-});
+  ctx.body = `Hello ${ctx.user}`
+})
 
 // GET /users/3 -> 'Hello Cheddar'
 ```
@@ -295,14 +288,14 @@ Generates routing middleware to be used with `koa`. If this middleware is
 never added to your `koa` application, your routes will not work.
 
 ```js
-const router = require('koa-joi-router');
-const public = router();
+import koaRouter from '@revoinc/koa-joi-router'
+const public = koaRouter()
 
-public.get('/home', homepage);
+public.get('/home', homepage)
 
-const app = koa();
-app.use(public.middleware()); // wired up
-app.listen();
+const app = koa()
+app.use(public.middleware()) // wired up
+app.listen()
 ```
 
 ## Additions to ctx.state
@@ -315,11 +308,12 @@ not have an affect on your running application but is available
 to meet your introspection needs.
 
 ```js
-const router = require('koa-joi-router');
-const public = router();
+import koaRouter from '@revoinc/koa-joi-router'
+const public = koaRouter()
+
 public.get('/hello', async (ctx) => {
-  console.log(ctx.state.route);
-});
+  console.log(ctx.state.route)
+})
 ```
 
 ## Additions to ctx.request
@@ -348,9 +342,9 @@ admin.route({
   path: '/blog',
   validate: { type: 'json' },
   handler: async (ctx) => {
-    console.log(ctx.request.body); // the incoming json as an object
+    console.log(ctx.request.body) // the incoming json as an object
   }
-});
+})
 ```
 
 #### form
@@ -368,12 +362,12 @@ admin.route({
   handler: async (ctx) => {
     console.log(ctx.request.body) // the incoming form as an object
   }
-});
+})
 ```
 
-### ctx.request.parts
+### ctx.request.multipart
 
-The `ctx.request.parts` property will be set when either of the following
+The `ctx.request.multipart` property will be set when either of the following
 `validate.type`s are set:
 
 - multipart
@@ -383,8 +377,8 @@ The `ctx.request.parts` property will be set when either of the following
 When `validate.type` is set to `multipart`, the incoming data must be multipart data.
 If it is not, validation will fail and the response
 status will be set to 400 or the value of `validate.failure` if specified.
-If successful, `ctx.request.parts` will be set to an
-[await-busboy][] object.
+If successful, `ctx.request.multipart` will be set to an
+[async-busboy][] object.
 
 ```js
 admin.route({
@@ -392,19 +386,20 @@ admin.route({
   path: '/blog',
   validate: { type: 'multipart' },
   handler: async (ctx) => {
-    const parts = ctx.request.parts;
-    let part;
+    let files, fields
+    let part
 
     try {
-      while ((part = await parts)) {
-        // do something with the incoming part stream
-        part.pipe(someOtherStream);
-      }
+      { files, fields } = await ctx.request.multipart
+      files.forEach(file => {
+        // do something with the incoming file stream
+        file.pipe(someOtherStream)
+      })
     } catch (err) {
       // handle the error
     }
 
-    console.log(parts.field.name); // form data
+    console.log(fields.name) // form data
   }
 });
 ```
@@ -421,7 +416,7 @@ admin.route({
   path: '/blog',
   validate: { },
   handler: async (ctx) => {
-    console.log(ctx.request.body, ctx.request.parts); // undefined undefined
+    console.log(ctx.request.body, ctx.request.multipart); // undefined undefined
   }
 })
 ```
@@ -454,7 +449,7 @@ router.route({
     }
   },
   handler: handler
-});
+})
 ```
 
 ### Validation of multiple individual status codes
@@ -474,7 +469,7 @@ router.route({
     }
   },
   handler: handler
-});
+})
 ```
 
 ### Validation of a status code range
@@ -494,7 +489,7 @@ router.route({
     }
   },
   handler: handler
-});
+})
 ```
 
 ### Validation of multiple individual status codes and ranges combined
@@ -516,7 +511,7 @@ router.route({
     }
   },
   handler: handler
-});
+})
 ```
 
 ### Validation of output headers
@@ -549,7 +544,7 @@ router.route({
     }
   },
   handler: handler
-});
+})
 ```
 
 ## Router instance properties
@@ -561,11 +556,12 @@ This is helpful when you'd like to introspect the previous definitions and
 take action e.g. to [generate API documentation][] etc.
 
 ```js
-const router = require('koa-joi-router');
-const admin = router();
-admin.post('/thing', { validate: { type: 'multipart' }}, handler);
+import koaRouter from '@revoinc/koa-joi-router'
+const admin = koaRouter()
 
-console.log(admin.routes);
+admin.post('/thing', { validate: { type: 'multipart' }}, handler)
+
+console.log(admin.routes)
 // [ { path: '/thing',
 //     method: [ 'post' ],
 //     handler: [ [Function] ],
@@ -579,10 +575,11 @@ Because [path-to-regexp][]
 supports it, so do we!
 
 ```js
-const router = require('koa-joi-router');
-const admin = router();
-admin.get('/blog/:year(\\d{4})-:day(\\d{2})-:article(\\d{3})', async (ctx, next) => { 
- console.log(ctx.request.params) // { year: '2017', day: '01', article: '011' } 
+import koaRouter from '@revoinc/koa-joi-router'
+const admin = koaRouter()
+
+admin.get('/blog/:year(\\d{4})-:day(\\d{2})-:article(\\d{3})', async (ctx, next) => {
+ console.log(ctx.request.params) // { year: '2017', day: '01', article: '011' }
 });
 ```
 
@@ -591,8 +588,9 @@ admin.get('/blog/:year(\\d{4})-:day(\\d{2})-:article(\\d{3})', async (ctx, next)
 Defining a route for multiple HTTP methods in a single shot is supported.
 
 ```js
-const router = require('koa-joi-router');
-const admin = router();
+import koaRouter from '@revoinc/koa-joi-router'
+const admin = koaRouter()
+
 admin.route({
   path: '/',
   method: ['POST', 'PUT'],
@@ -606,8 +604,9 @@ Often times you may need to add additional, route specific middleware to a
 single route.
 
 ```js
-const router = require('koa-joi-router');
-const admin = router();
+import koaRouter from '@revoinc/koa-joi-router'
+const admin = koaRouter()
+
 admin.route({
   path: '/',
   method: ['POST', 'PUT'],
@@ -621,9 +620,10 @@ You may want to bundle and nest middleware in different ways for reuse and
 organization purposes.
 
 ```js
-const router = require('koa-joi-router');
-const admin = router();
+import koaRouter from '@revoinc/koa-joi-router'
+const admin = koaRouter()
 const commonMiddleware = [ yourMiddleware, someOtherMiddleware ];
+
 admin.route({
   path: '/',
   method: ['POST', 'PUT'],
@@ -634,8 +634,9 @@ admin.route({
 This also works with the .get(),post(),put(),delete(), etc HTTP method helpers.
 
 ```js
-const router = require('koa-joi-router');
-const admin = router();
+import koaRouter from '@revoinc/koa-joi-router'
+const admin = koaRouter()
+
 const commonMiddleware = [ yourMiddleware, someOtherMiddleware ];
 admin.get('/', commonMiddleware, yourHandler);
 ```

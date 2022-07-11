@@ -1,16 +1,8 @@
 {
-  "name": "koa-joi-router",
-  "version": "8.0.0",
-  "description": "Configurable, input validated routing for koa.",
+  "name": "@revoinc/koa-joi-router",
+  "version": "9.0.5",
+  "description": "Configurable, input validated routing for Koa.",
   "main": "joi-router.js",
-  "keywords": [
-    "joi",
-    "koa",
-    "router",
-    "validate",
-    "validator",
-    "validation"
-  ],
   "scripts": {
     "lint": "eslint ./*.js",
     "test": "mocha --exit",
@@ -21,16 +13,20 @@
   "engines": {
     "node": ">= 16"
   },
-  "author": "Aaron Heckmann <aaron.heckmann+github@gmail.com>",
-  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/koajs/joi-router.git"
+    "url": "git+https://github.com/revolution-robotics/revoinc-koa-joi-router.git"
   },
-  "bugs": {
-    "url": "https://github.com/koajs/joi-router/issues"
-  },
-  "homepage": "https://github.com/koajs/joi-router",
+  "keywords": [
+    "joi",
+    "koa",
+    "router",
+    "validate",
+    "validator",
+    "validation"
+  ],
+  "author": "Aaron Heckmann <aaron.heckmann+github@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "@koa/router": "^11.0.1",
     "@revoinc/async-busboy": "^2.0.3",
@@ -54,6 +50,8 @@
     "@babel/preset-env": "^7.18.6",
     "standard": "^16.0.3"
   },
+  "bugs": "https://github.com/revolution-robotics/revoinc-koa-joi-router/issues",
+  "homepage": "https://github.com/revolution-robotics/revoinc-koa-joi-router#readme",
   "standard": {
     "parser": "@babel/eslint-parser"
   },
