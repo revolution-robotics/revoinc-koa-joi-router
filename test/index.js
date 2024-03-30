@@ -475,7 +475,7 @@ describe('koa-joi-router', () => {
                                 .type('json')
                                 .send(invalid)
                                 .expect(200)
-                                .expect(/^Unexpected token \{/, done)
+                            .expect(/^Expected property name or '}'/, done)
                         })
                     })
                 })
